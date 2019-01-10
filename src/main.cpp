@@ -35,7 +35,7 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0x235b6e7fa788b4a0914a959c7ccb38f6cb2706a4c5bd68c0d64f22ba7772baf9");
+uint256 hashGenesisBlock("0x");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Clonecoin: starting difficulty is 1 / 2^12
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -1087,27 +1087,27 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock)
 
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
-    int64 nSubsidy = 500 * COIN;
+    int64 nSubsidy = 300 * COIN;
     if(nHeight == 2)  
     {
-        nSubsidy = 2000000 * COIN;
+        nSubsidy = 500000000 * COIN;
     }
-    else if(nHeight < 5000)  
+    else if(nHeight < 100000)  
     {
-        nSubsidy = 5000 * COIN;
+        nSubsidy = 1000 * COIN;
     }
-    else if(nHeight < 10000)  
+    else if(nHeight < 500000)  
     {
-        nSubsidy = 2500 * COIN;
+        nSubsidy = 500 * COIN;
     }
-    // Subsidy is cut in half every 840000 blocks, which will occur approximately every 4 years
-    nSubsidy >>= (nHeight / 840000); // Clonecoin: 840k blocks in ~4 years
+    // Subsidy is cut in half every 5000000 blocks, which will occur approximately every 2.5 years
+    nSubsidy >>= (nHeight / 5000000); // Clonecoin: 840k blocks in ~2.5 years
 
     return nSubsidy + nFees;
 }
 
-static const int64 nTargetTimespan = 10 * 30; // Clonecoin: 5 minutes
-static const int64 nTargetSpacing = 1 * 30; // Clonecoin: 30 Seconds.
+static const int64 nTargetTimespan = 3 * 10; // Clonecoin: 30 Seconds.
+static const int64 nTargetSpacing = 1 * 10; // Clonecoin: 10 Seconds.
 static const int64 nInterval = nTargetTimespan / nTargetSpacing;
 
 //
@@ -2753,11 +2753,11 @@ bool LoadBlockIndex()
 {
     if (fTestNet)
     {
-        pchMessageStart[0] = 0xd1;
-        pchMessageStart[1] = 0xb2;
-        pchMessageStart[2] = 0xa4;
-        pchMessageStart[3] = 0xdc;
-        hashGenesisBlock = uint256("0x235b6e7fa788b4a0914a959c7ccb38f6cb2706a4c5bd68c0d64f22ba7772baf9");
+        pchMessageStart[0] = 0xd3;
+        pchMessageStart[1] = 0xa3;
+        pchMessageStart[2] = 0xc3;
+        pchMessageStart[3] = 0xb3;
+        hashGenesisBlock = uint256("0x");
     }
 
     //
@@ -2790,26 +2790,26 @@ bool InitBlockIndex() {
         //   vMerkleTree: 97ddfbbae6
 
         // Genesis block
-        const char* pszTimestamp = "05/Nov/2014 Police: 1 dead after car rams Jerusalem train platform in terror attack";
+        const char* pszTimestamp = "10 Janvier 2019 - Acte 9 des gilets jaunes en vue";
         CTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
         txNew.vin[0].scriptSig = CScript() << 486604799 << CBigNum(4) << vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
         txNew.vout[0].nValue = 50 * COIN;
-        txNew.vout[0].scriptPubKey = CScript() << ParseHex("043384710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9") << OP_CHECKSIG;
+        txNew.vout[0].scriptPubKey = CScript() << ParseHex("033284710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9") << OP_CHECKSIG;
         CBlock block;
         block.vtx.push_back(txNew);
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1415210670;
+        block.nTime    = 1547127015;
         block.nBits    = 0x1e0ffff0;
-        block.nNonce   = 2110551;
+        block.nNonce   = 0;
 
         if (fTestNet)
         {
-            block.nTime    = 1415210670;
-            block.nNonce   = 2110551;
+            block.nTime    = 1547127015;
+            block.nNonce   = 0;
         }
 
         //// debug print
@@ -2817,7 +2817,7 @@ bool InitBlockIndex() {
         printf("%s\n", hash.ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-        assert(block.hashMerkleRoot == uint256("0xd010ddcc6651af0e28e50ee36096e438b7974da9d58f1be95a968b180756a0c8"));
+        assert(block.hashMerkleRoot == uint256("0x"));
         if (true && block.GetHash() != hashGenesisBlock)
         {
             printf("Searching for genesis block...\n");
@@ -3120,7 +3120,7 @@ bool static AlreadyHave(const CInv& inv)
 // The message start string is designed to be unlikely to occur in normal data.
 // The characters are rarely used upper ASCII, not valid as UTF-8, and produce
 // a large 4-byte int at any alignment.
-unsigned char pchMessageStart[4] = { 0xc3, 0xd2, 0xd1, 0xbd }; // Clonecoin: increase each by adding 2 to bitcoin's value.
+unsigned char pchMessageStart[4] = { 0xc4, 0xd4, 0xd4, 0xb1 }; // Clonecoin: increase each by adding 2 to bitcoin's value.
 
 
 void static ProcessGetData(CNode* pfrom)
